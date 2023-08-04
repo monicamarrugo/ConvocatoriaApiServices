@@ -40,7 +40,7 @@ namespace ConvocatoriaServices.Context.Application
 
             modelBuilder.Entity<Tipo_Documento>()
                 .HasOne(td => td.Documento)
-                .WithOne(d => d.Tipo_Documento)
+                .WithOne(d => d.TipoDocumento)
                 .HasForeignKey<Documento>(dc => dc.tipo_documento);
 
             modelBuilder.Entity<Inscripcion_Convocatoria>()

@@ -10,7 +10,7 @@ namespace ConvocatoriaServices.Models
         public int id_documento { get; set; }
 
         public string tipo_documento { get; set; }
-        public Tipo_Documento Tipo_Documento { get; set; }
+        public Tipo_Documento TipoDocumento { get; set; }
         public string contenido { get; set; }
         public string codigo_inscripcion { get; set; }
         public Inscripcion_Convocatoria Inscripcion_Convocatoria { get; set; }

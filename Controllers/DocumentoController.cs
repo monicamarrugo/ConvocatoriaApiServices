@@ -17,8 +17,8 @@ namespace ConvocatoriaApiServices.Controllers
             this._documentoService = documentoService;
         }
 
-        [HttpPost("subir")]
-        public async Task<IActionResult> UploadDocumento(DocumentoDto datosDocumento)
+        [HttpPost("subir2")]
+        public async Task<IActionResult> UploadDocumento([FromBody] DocumentoDto datosDocumento)
         {
             RtaTransaccion rta = new RtaTransaccion();
             try
@@ -41,9 +41,7 @@ namespace ConvocatoriaApiServices.Controllers
                 datosDocumento.ruta = filePath;
 
                 var respuestaDocumento = this._documentoService.SaveDocumento(datosDocumento);
-                rta.error = "NO";
-                rta.respuesta = JsonConvert.SerializeObject(respuestaDocumento);
-                return Ok(rta);
+                return Ok(respuestaDocumento);
             }
             catch(Exception ex)
             {
@@ -53,8 +51,35 @@ namespace ConvocatoriaApiServices.Controllers
             }
         }
 
+        [HttpPost("subir")]
+        public async Task<IActionResult> UploadFileWithProperties([FromForm] DocumentoDto datosDocumento)
+        {
+            RtaTransaccion rta = new RtaTransaccion();
+            try
+            {
+                var file = Request.Form.Files[0];
+                if (file.Length > 0)
+                {
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "uploads", file.FileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+                    datosDocumento.ruta = file.FileName;
+                    var respuestaDocumento = this._documentoService.SaveDocumento(datosDocumento);
+                    return Ok(respuestaDocumento);
+                }
+                return BadRequest("No file was uploaded.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
+    
+
         [HttpGet("listar")]
-        public IActionResult GetListDocumento(string codigoInscripcion)
+        public IActionResult GetListDocumento([FromQuery] string codigoInscripcion)
         {
             RtaTransaccion rta = new RtaTransaccion();
             try
@@ -62,7 +87,7 @@ namespace ConvocatoriaApiServices.Controllers
                 var documentos = this._documentoService.ListDocumento(codigoInscripcion);
                 rta.error = "NO";
                 rta.respuesta = JsonConvert.SerializeObject(documentos);
-                return Ok(rta);
+                return Ok(documentos);
             }
             catch(Exception ex)
             {

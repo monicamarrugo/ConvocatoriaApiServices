@@ -43,9 +43,7 @@ namespace ConvocatoriaApiServices.Services
             }
             catch(Exception ex)
             {
-                rta.error = "SI";
-                rta.errorDetail = ex.Message;
-                return rta;
+                throw new Exception(ex.Message);
             }
         }
     }
