@@ -18,7 +18,7 @@ namespace ConvocatoriaApiServices.Controllers
         }
 
         [HttpPost("subir2")]
-        public async Task<IActionResult> UploadDocumento([FromBody] DocumentoDto datosDocumento)
+        public async Task<IActionResult> UploadDocumento([FromBody] DocumentoUploadedDto datosDocumento)
         {
             RtaTransaccion rta = new RtaTransaccion();
             try
@@ -52,7 +52,7 @@ namespace ConvocatoriaApiServices.Controllers
         }
 
         [HttpPost("subir")]
-        public async Task<IActionResult> UploadFileWithProperties([FromForm] DocumentoDto datosDocumento)
+        public async Task<IActionResult> UploadFileWithProperties([FromForm] DocumentoUploadedDto datosDocumento)
         {
             RtaTransaccion rta = new RtaTransaccion();
             try
@@ -76,7 +76,24 @@ namespace ConvocatoriaApiServices.Controllers
                 return StatusCode(500, $"Internal server error: {ex}");
             }
         }
-    
+        [HttpPost("descargar")]
+        public IActionResult DownloadFile(string fileName)
+        {
+            // Ruta completa al archivo en el servidor (puede variar según tu aplicación)
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "uploads", fileName);
+
+            // Comprobar si el archivo existe
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound();
+            }
+
+            var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            var mimeType = "application/pdf"; // Cambiar según el tipo de archivo
+
+            return File(fileStream, mimeType, fileName);
+        }
+
 
         [HttpGet("listar")]
         public IActionResult GetListDocumento([FromQuery] string codigoInscripcion)
@@ -84,10 +101,15 @@ namespace ConvocatoriaApiServices.Controllers
             RtaTransaccion rta = new RtaTransaccion();
             try
             {
+                List<DocumentoResponseDto> listaDocumento = new List<DocumentoResponseDto>();
                 var documentos = this._documentoService.ListDocumento(codigoInscripcion);
+                documentos.ForEach(documento => listaDocumento.Add(
+                    new DocumentoResponseDto { contenido= documento.contenido, 
+                        tipoDocumento = documento.tipo_documento,
+                        descTipodocumento = documento.TipoDocumento.descripcion}));
                 rta.error = "NO";
-                rta.respuesta = JsonConvert.SerializeObject(documentos);
-                return Ok(documentos);
+                rta.respuesta = JsonConvert.SerializeObject(listaDocumento);
+                return Ok(listaDocumento);
             }
             catch(Exception ex)
             {

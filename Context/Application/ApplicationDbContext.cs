@@ -43,6 +43,12 @@ namespace ConvocatoriaServices.Context.Application
                 .WithOne(d => d.TipoDocumento)
                 .HasForeignKey<Documento>(dc => dc.tipo_documento);
 
+ 
+
+
+
+
+
             modelBuilder.Entity<Inscripcion_Convocatoria>()
                 .HasOne(ic => ic.Documento)
                 .WithOne(d => d.Inscripcion_Convocatoria)

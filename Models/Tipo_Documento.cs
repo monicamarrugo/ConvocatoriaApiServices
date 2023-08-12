@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace ConvocatoriaServices.Models
 {
@@ -13,6 +14,7 @@ namespace ConvocatoriaServices.Models
         public string codigo { get; set; }
         public string descripcion { get; set; }
 
+        [JsonIgnore]
         public Documento Documento { get; set; }
 
     }

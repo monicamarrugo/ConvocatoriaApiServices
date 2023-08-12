@@ -2,6 +2,7 @@
 using ConvocatoriaApiServices.Services.Interfaces;
 using ConvocatoriaServices.Context.Application;
 using ConvocatoriaServices.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ConvocatoriaApiServices.Services
 {
@@ -17,7 +18,10 @@ namespace ConvocatoriaApiServices.Services
             RtaTransaccion rta = new RtaTransaccion();
             try { 
                 List<Documento> documentos =
-                    _context.Documentos.Where(d => d.codigo_inscripcion.Equals(codigoInscripcion)).ToList();
+                    _context.Documentos
+                    .Include(t=>t.TipoDocumento)
+                    .Where(d => d.codigo_inscripcion.Equals(codigoInscripcion))
+                    .ToList();
                 return documentos;
             }catch (Exception ex)
             {
@@ -25,7 +29,7 @@ namespace ConvocatoriaApiServices.Services
             }
         }
 
-        public RtaTransaccion SaveDocumento(DocumentoDto datosDocumento)
+        public RtaTransaccion SaveDocumento(DocumentoUploadedDto datosDocumento)
         {
             RtaTransaccion rta = new RtaTransaccion();
             try

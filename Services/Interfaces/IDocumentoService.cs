@@ -5,7 +5,7 @@ namespace ConvocatoriaApiServices.Services.Interfaces
 {
     public interface IDocumentoService
     {
-        public RtaTransaccion SaveDocumento(DocumentoDto datosDocumento);
+        public RtaTransaccion SaveDocumento(DocumentoUploadedDto datosDocumento);
         public List<Documento> ListDocumento(string codigoInscripcion);
     }
 }

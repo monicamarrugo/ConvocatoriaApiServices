@@ -1,6 +1,6 @@
 ﻿namespace ConvocatoriaApiServices.Models.Dtos
 {
-    public class DocumentoDto
+    public class DocumentoUploadedDto
     {
         public string tipoDocumento { get; set; }
         public string codigoInscripcion { get; set; }
