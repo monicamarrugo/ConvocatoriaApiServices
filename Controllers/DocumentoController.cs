@@ -1,5 +1,6 @@
 ﻿using ConvocatoriaApiServices.Models.Dtos;
 using ConvocatoriaApiServices.Services.Interfaces;
+using ConvocatoriaServices.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -79,6 +80,9 @@ namespace ConvocatoriaApiServices.Controllers
         [HttpPost("descargar")]
         public IActionResult DownloadFile(string fileName)
         {
+            if (String.IsNullOrEmpty(fileName)) {
+                return BadRequest("Nombre de archivo es nulo");
+            }
             // Ruta completa al archivo en el servidor (puede variar según tu aplicación)
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "uploads", fileName);
 
@@ -103,10 +107,18 @@ namespace ConvocatoriaApiServices.Controllers
             {
                 List<DocumentoResponseDto> listaDocumento = new List<DocumentoResponseDto>();
                 var documentos = this._documentoService.ListDocumento(codigoInscripcion);
-                documentos.ForEach(documento => listaDocumento.Add(
-                    new DocumentoResponseDto { contenido= documento.contenido, 
+                documentos.ForEach(documento => {
+
+                    listaDocumento.Add(
+                    new DocumentoResponseDto
+                    {
+                        contenido = documento.contenido,
                         tipoDocumento = documento.tipo_documento,
-                        descTipodocumento = documento.TipoDocumento.descripcion}));
+                        descTipodocumento = documento.TipoDocumento.descripcion
+                    }
+                    );
+                    }
+                    );
                 rta.error = "NO";
                 rta.respuesta = JsonConvert.SerializeObject(listaDocumento);
                 return Ok(listaDocumento);

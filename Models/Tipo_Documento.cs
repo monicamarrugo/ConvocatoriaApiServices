@@ -15,7 +15,7 @@ namespace ConvocatoriaServices.Models
         public string descripcion { get; set; }
 
         [JsonIgnore]
-        public Documento Documento { get; set; }
+        public ICollection<Documento> Documentos { get; set; }
 
     }
 }

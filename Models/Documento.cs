@@ -8,6 +8,8 @@ namespace ConvocatoriaServices.Models
     {
         [Key]
         public int id_documento { get; set; }
+
+        
         public string tipo_documento { get; set; }
         public Tipo_Documento TipoDocumento { get; set; }
         public string contenido { get; set; }

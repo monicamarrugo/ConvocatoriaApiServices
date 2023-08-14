@@ -38,15 +38,20 @@ namespace ConvocatoriaServices.Context.Application
                 .WithOne(p => p.TipoIdentificacion)
                 .HasForeignKey<Participante>(i => i.tipo_identificacion);
 
-            modelBuilder.Entity<Tipo_Documento>()
+            /*modelBuilder.Entity<Tipo_Documento>()
                 .HasOne(td => td.Documento)
-                .WithOne(d => d.TipoDocumento)
-                .HasForeignKey<Documento>(dc => dc.tipo_documento);
+                .WithMany(d => d.TipoDocumento)
+                .HasForeignKey(dc => dc.codigo);
 
- 
+            modelBuilder.Entity<Documento>()
+                .HasMany(d => d.TipoDocumento)
+                .WithOne(t => t.Documento)
+                .HasForeignKey(t => t.codigo);*/
 
-
-
+            modelBuilder.Entity<Documento>()
+               .HasOne(d => d.TipoDocumento)
+               .WithMany(t => t.Documentos)
+               .HasForeignKey(d => d.tipo_documento);
 
 
             modelBuilder.Entity<Inscripcion_Convocatoria>()

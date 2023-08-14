@@ -6,5 +6,6 @@ namespace ConvocatoriaApiServices.Services.Interfaces
     {
         public List<Perfil> GetAllPerfiles();
         public List<Tipo_Identificacion> GetAllTiposIdentificacion();
+        public List<Tipo_Documento> GetAllTiposDocumento();
     }
 }

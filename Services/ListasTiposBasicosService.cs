@@ -1,4 +1,5 @@
-﻿using ConvocatoriaApiServices.Services.Interfaces;
+﻿using ConvocatoriaApiServices.Models.Dtos;
+using ConvocatoriaApiServices.Services.Interfaces;
 using ConvocatoriaServices.Context.Application;
 using ConvocatoriaServices.Models;
 
@@ -21,6 +22,11 @@ namespace ConvocatoriaApiServices.Services
         public List<Tipo_Identificacion> GetAllTiposIdentificacion() 
         {
             return _context.Tipo_Identificaciones.ToList();
+        }
+
+        public List<Tipo_Documento> GetAllTiposDocumento()
+        {
+            return _context.Tipo_Documentos.ToList();
         }
 
     }

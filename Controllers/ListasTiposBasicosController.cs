@@ -1,4 +1,5 @@
-﻿using ConvocatoriaApiServices.Services.Interfaces;
+﻿using ConvocatoriaApiServices.Models.Dtos;
+using ConvocatoriaApiServices.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,6 +27,28 @@ namespace ConvocatoriaApiServices.Controllers
         {
             var tiposIdentificacion = this._tiposService.GetAllTiposIdentificacion();
             return Ok(tiposIdentificacion);
+        }
+
+        [HttpGet("GetListaTiposDocumentos")]
+        public IActionResult GetListaTiposDocumentos()
+        {
+            List<TiposBasicosResponseDto> tiposDocumento = new List<TiposBasicosResponseDto>();
+            var tiposDocumentoResponse = this._tiposService.GetAllTiposDocumento();
+            if (tiposDocumentoResponse != null && tiposDocumentoResponse.Count > 0) {
+
+                tiposDocumentoResponse.ForEach(t =>
+                {
+                    tiposDocumento.Add(
+                        new TiposBasicosResponseDto
+                        {
+                            codigo = t.codigo,
+                            descripcion = t.descripcion,
+                        }
+                        );
+                });
+            }
+
+            return Ok(tiposDocumento);
         }
     }
 }
