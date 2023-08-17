@@ -1,4 +1,5 @@
-﻿using ConvocatoriaApiServices.Services;
+﻿using ConvocatoriaApiServices.Models.Dtos;
+using ConvocatoriaApiServices.Services;
 using ConvocatoriaApiServices.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,14 @@ namespace ConvocatoriaApiServices.Controllers
         {
             var convocatorias = this._convocatoriaService.GetAllConvocatorias();
             return Ok(convocatorias);
+        }
+
+        [HttpGet("obtenerConvocatoria")]
+        public IActionResult GetConvocatoriaIsActive(int idConvocatoria)
+        {
+            var convocatoria = this._convocatoriaService.EstadoConvocatoria(idConvocatoria);
+
+           return Ok(convocatoria);
         }
     }
 }

@@ -2,6 +2,7 @@
 using ConvocatoriaApiServices.Services.Interfaces;
 using ConvocatoriaServices.Context.Application;
 using ConvocatoriaServices.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -29,7 +30,19 @@ namespace ConvocatoriaApiServices.Services
                     rta.errorDetail = "Datos inscripcion incompletos!";
                     return rta;
                 }
-                Inscripcion_Convocatoria inscripcion = new Inscripcion_Convocatoria();
+                var encontrado = _context.Inscripcion_Convocatorias.Any(i
+                    => i.identificacion_participante.Trim()
+                    .Equals(datosInscripcion.identificacion.Trim()) 
+                    && i.codigo_convocatoria.Equals(datosInscripcion.codigoConvocatoria));
+
+                if (encontrado)
+                {
+                    rta.error = "SI";
+                    rta.errorDetail = String.Format("El participante con número de identificación {0} " +
+                        "se encuentra inscrito a la convocatoria!", datosInscripcion.identificacion.Trim());
+                    return rta;
+                }
+               Inscripcion_Convocatoria inscripcion = new Inscripcion_Convocatoria();
                 inscripcion.codigo = CodeGenerate(datosInscripcion.codigoConvocatoria
                                     + datosInscripcion.identificacion);
                 inscripcion.codigo_convocatoria = datosInscripcion.codigoConvocatoria;
