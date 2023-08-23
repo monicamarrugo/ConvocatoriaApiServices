@@ -16,7 +16,7 @@ namespace ConvocatoriaApiServices.Services
 
         public List<Perfil> GetAllPerfiles()
         {
-            return _context.Perfiles.ToList();
+            return _context.Perfiles.OrderBy(p => p.codigo).ToList();
         }
 
         public List<Tipo_Identificacion> GetAllTiposIdentificacion() 

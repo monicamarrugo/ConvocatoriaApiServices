@@ -2,6 +2,7 @@
 using ConvocatoriaApiServices.Services.Interfaces;
 using ConvocatoriaServices.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace ConvocatoriaApiServices.Controllers
@@ -12,10 +13,13 @@ namespace ConvocatoriaApiServices.Controllers
 
         private readonly IWebHostEnvironment _environment;
         private IDocumentoService _documentoService;
-        public DocumentoController(IWebHostEnvironment environment, IDocumentoService documentoService)
+        private readonly IConfiguration _configuration;
+        public DocumentoController(IWebHostEnvironment environment, IDocumentoService documentoService,
+            IConfiguration configuration)
         {
             _environment = environment;
             this._documentoService = documentoService;
+            _configuration = configuration;
         }
 
         [HttpPost("subir2")]
@@ -61,7 +65,18 @@ namespace ConvocatoriaApiServices.Controllers
                 var file = Request.Form.Files[0];
                 if (file.Length > 0)
                 {
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "uploads", file.FileName);
+
+                    var dirUploads = _configuration.GetSection("CustomProperties").GetValue<String>("DirUploads");
+                    var dirInscripcion = Path.Combine(dirUploads, "DocumentosConvocatoria",
+                        datosDocumento.codigoInscripcion);
+                    if (!Directory.Exists(dirInscripcion))
+                    {
+                        Directory.CreateDirectory(dirInscripcion);
+                    }
+
+                    var filePath = Path.Combine(dirUploads, "DocumentosConvocatoria", 
+                        datosDocumento.codigoInscripcion, file.FileName);
+
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await file.CopyToAsync(stream);
@@ -74,7 +89,9 @@ namespace ConvocatoriaApiServices.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex}");
+                rta.error = "SI";
+                rta.errorDetail= ex.Message;
+                return Ok(rta);
             }
         }
         [HttpPost("descargar")]
