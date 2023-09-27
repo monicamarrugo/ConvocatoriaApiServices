@@ -1,8 +1,10 @@
-﻿using ConvocatoriaApiServices.Models.Dtos;
+﻿using ConvocatoriaApiServices.Models;
+using ConvocatoriaApiServices.Models.Dtos;
 using ConvocatoriaApiServices.Services.Interfaces;
 using ConvocatoriaServices.Context.Application;
 using ConvocatoriaServices.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -81,11 +83,129 @@ namespace ConvocatoriaApiServices.Services
             try
             {
                var inscripcion =
-                    _context.Inscripcion_Convocatorias.Where(i => i.codigo.Equals(codigoInscripcion)).FirstOrDefault();
+                    _context.Inscripcion_Convocatorias.Include(i => i.Participante).Where(i => i.codigo.Equals(codigoInscripcion)).FirstOrDefault();
                 
                 return inscripcion;
             }
             catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public List<DtoDocumentoMinimo> GetDocumentosMinimos(string codigoInscripcion)
+        {
+            List<DtoDocumentoMinimo> minimos = new List<DtoDocumentoMinimo>();
+            try
+            {
+                
+                var tiposMinimos = _context.Tipo_DocumentoMinimo.ToList();
+
+               
+                    foreach (var tipo in tiposMinimos)
+                    {
+                        var documentoMinimos =
+                         _context.Inscripcion_DocumentoMinimo.Include(dm => dm.Tipo_DocumentoMinimo)
+                         .Where(i => i.codigo_inscripcion.Equals(codigoInscripcion) && i.codigo_documento.Equals(tipo.codigo_documento))
+                         .FirstOrDefault();
+
+                        if (documentoMinimos != null)
+                        {
+                            minimos.Add(new DtoDocumentoMinimo()
+                            {
+                                codigoInscripcion = codigoInscripcion,
+                                codigoTipoDocumento = tipo.codigo_documento,
+                                nombreTipoDocumento = documentoMinimos.Tipo_DocumentoMinimo.nombre_documento,
+                                cumplido = documentoMinimos.cumplido,
+                                no_cumplido = documentoMinimos.no_cumplido,
+                                fecha_cumplido = documentoMinimos.fecha_cumplido,
+                                observacion = documentoMinimos.observacion
+                            });
+                        }
+                        else
+                        {
+                        minimos.Add(new DtoDocumentoMinimo()
+                        {
+                            codigoInscripcion = codigoInscripcion,
+                            codigoTipoDocumento = tipo.codigo_documento,
+                            nombreTipoDocumento = tipo.nombre_documento,
+                            cumplido = false,
+                            no_cumplido = false
+                        });
+                    }
+                    }
+                
+
+                return minimos;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public RtaTransaccion SaveRequerimientoMin(List<DtoDocumentoMinimo> documentoMinimo)
+        {
+            RtaTransaccion rta = new RtaTransaccion();
+            try
+            {
+
+                if (documentoMinimo == null)
+                {
+                    rta.error = "SI";
+                    rta.errorDetail = "Datos documento incompletos!";
+                    return rta;
+                }
+                foreach (var documento in documentoMinimo)
+                {
+                    Inscripcion_DocumentoMinimo requerimiento = new Inscripcion_DocumentoMinimo();
+                    requerimiento.codigo_inscripcion = documento.codigoInscripcion;
+                    requerimiento.codigo_documento = documento.codigoTipoDocumento;
+                    requerimiento.cumplido = documento.cumplido;
+                    requerimiento.no_cumplido = documento.no_cumplido;
+                    requerimiento.observacion = documento.observacion;
+
+                    var documentoMinimos =
+                             _context.Inscripcion_DocumentoMinimo.Include(dm => dm.Tipo_DocumentoMinimo)
+                             .Where(i => i.codigo_inscripcion.Equals(documento.codigoInscripcion) && i.codigo_documento.Equals(documento.codigoTipoDocumento))
+                             .FirstOrDefault();
+
+                    if (documentoMinimos != null)
+                    {
+                        _context.Inscripcion_DocumentoMinimo.Update(requerimiento);
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        _context.Inscripcion_DocumentoMinimo.Add(requerimiento);
+                        _context.SaveChanges();
+                    }
+                }
+               
+
+                rta.error = "NO";
+                rta.mensaje = "Verificación guardada con exito!";
+                rta.respuesta = "";
+                return rta;
+            }
+            catch (Exception ex)
+            {
+                rta.error = "SI";
+                rta.errorDetail = ex.Message;
+                return rta;
+            }
+        }
+
+        public Boolean ExistsInscripcion(string codigoInscripcion)
+        {
+            try
+            {
+                var existeInscripcion =
+                     _context.Inscripcion_Convocatorias.Any(i => i.codigo.Equals(codigoInscripcion));
+
+                return existeInscripcion;
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -111,6 +231,15 @@ namespace ConvocatoriaApiServices.Services
             codigo.Append(codigoRandom.ToString());
 
             return codigo.ToString();
+        }
+
+
+        public List<Inscripcion_Convocatoria> GetInscripcionByPerfil(String codigoPerfil)
+        {
+            var listaInscripcion =
+                    _context.Inscripcion_Convocatorias.Include(c=>c.Participante).Where(i => i.codigo_perfil.Equals(codigoPerfil)).ToList();
+
+            return listaInscripcion;
         }
     }
 }

@@ -28,6 +28,19 @@ namespace ConvocatoriaApiServices.Controllers
             var tiposIdentificacion = this._tiposService.GetAllTiposIdentificacion();
             return Ok(tiposIdentificacion);
         }
+        [HttpGet("GetListaTiposDocMinimo")]
+        public IActionResult GetListaTiposDocumentosMinimos()
+        {
+            var tiposIdentificacion = this._tiposService.GetAllTiposDocumentoMinimo();
+            return Ok(tiposIdentificacion);
+        }
+
+        [HttpGet("GetListaFacultadPerfil")]
+        public IActionResult GetListaFacultadPerfil(int idComision)
+        {
+            var tiposIdentificacion = this._tiposService.GetAllFacultadPerfil(idComision);
+            return Ok(tiposIdentificacion);
+        }
 
         [HttpGet("GetListaTiposDocumentos")]
         public IActionResult GetListaTiposDocumentos()

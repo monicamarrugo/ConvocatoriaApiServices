@@ -40,6 +40,7 @@ public class Program
         // Add services to the container.    
         builder.Services.AddControllers();
         builder.Services.AddScoped<IConvocatoriaService, ConvocatoriaService>();
+        builder.Services.AddScoped<IComisionConvocatoriaService, ComisionConvocatoriaService>();
         builder.Services.AddScoped<IInscripcionService, InscripicionService>();
         builder.Services.AddScoped<IDocumentoService, DocumentoService>();
         builder.Services.AddScoped<IListasTiposBasicosService, ListasTiposBasicosService>();

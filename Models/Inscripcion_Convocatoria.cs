@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ConvocatoriaApiServices.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConvocatoriaServices.Models
@@ -17,5 +18,7 @@ namespace ConvocatoriaServices.Models
         public Participante Participante { get; set; }
 
         public Documento Documento { get; set; }
+
+        public Inscripcion_DocumentoMinimo Inscripcion_DocumentoMinimo { get; set; }
     }
 }

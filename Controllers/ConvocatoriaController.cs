@@ -9,8 +9,11 @@ namespace ConvocatoriaApiServices.Controllers
     public class ConvocatoriaController : ControllerBase
     {
         public IConvocatoriaService _convocatoriaService;
-        public ConvocatoriaController(IConvocatoriaService convocatoriaService) {
+        public IComisionConvocatoriaService _comisionConvocatoriaService;
+        public ConvocatoriaController(IConvocatoriaService convocatoriaService, IComisionConvocatoriaService comisionConvocatoriaService = null)
+        {
             this._convocatoriaService = convocatoriaService;
+            _comisionConvocatoriaService = comisionConvocatoriaService;
         }
 
 
@@ -21,12 +24,26 @@ namespace ConvocatoriaApiServices.Controllers
             return Ok(convocatorias);
         }
 
+        [HttpGet("listarComision")]
+        public IActionResult GetListComision()
+        {
+            var convocatorias = this._comisionConvocatoriaService.GetAllComisionConvocatoria();
+            return Ok(convocatorias);
+        }
+
         [HttpGet("obtenerConvocatoria")]
         public IActionResult GetConvocatoriaIsActive(int idConvocatoria)
         {
             var convocatoria = this._convocatoriaService.EstadoConvocatoria(idConvocatoria);
 
            return Ok(convocatoria);
+        }
+
+        [HttpPost("autenticarComision")]
+        public IActionResult AutenticarComision([FromBody] UsuarioDto datosInscripcion)
+        {
+            var comision = this._comisionConvocatoriaService.ExistComisionConvocatoria(datosInscripcion);
+            return Ok(comision);
         }
     }
 }

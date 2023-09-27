@@ -5,6 +5,7 @@ namespace ConvocatoriaApiServices.Models.Dtos
     public class InscripcionDto
     {
         public Int32 codigoConvocatoria { get; set;}
+        public string codigoInscripcion { get; set; }
         public string codigoPerfil { get; set; }
         public String tipoIdentificacion { get; set; }
         public String identificacion { get; set; }

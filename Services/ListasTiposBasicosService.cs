@@ -1,4 +1,5 @@
-﻿using ConvocatoriaApiServices.Models.Dtos;
+﻿using ConvocatoriaApiServices.Models;
+using ConvocatoriaApiServices.Models.Dtos;
 using ConvocatoriaApiServices.Services.Interfaces;
 using ConvocatoriaServices.Context.Application;
 using ConvocatoriaServices.Models;
@@ -27,6 +28,16 @@ namespace ConvocatoriaApiServices.Services
         public List<Tipo_Documento> GetAllTiposDocumento()
         {
             return _context.Tipo_Documentos.ToList();
+        }
+
+        public List<Tipo_DocumentoMinimo> GetAllTiposDocumentoMinimo()
+        {
+            return _context.Tipo_DocumentoMinimo.ToList();
+        }
+
+        public List<FacultadPerfil> GetAllFacultadPerfil(int idComision)
+        {
+            return _context.FacultadPerfil.Where(fp => fp.id_comision.Equals(idComision)).ToList();
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using ConvocatoriaServices.Models;
+﻿using ConvocatoriaApiServices.Models;
+using ConvocatoriaServices.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -17,6 +18,10 @@ namespace ConvocatoriaServices.Context.Application
         public DbSet<Perfil> Perfiles { get; set; }
         public DbSet<Tipo_Documento> Tipo_Documentos { get; set; }
         public DbSet<Tipo_Identificacion> Tipo_Identificaciones { get; set; }
+        public DbSet<Comision_Convocatoria> Comision_Convocatorias { get; set; }
+        public DbSet<Tipo_DocumentoMinimo> Tipo_DocumentoMinimo { get; set; }
+        public DbSet<FacultadPerfil> FacultadPerfil { get; set; }
+        public DbSet<Inscripcion_DocumentoMinimo> Inscripcion_DocumentoMinimo { get; set; }
         // Otros DbSets...
 
         private readonly ILogger<ApplicationDbContext> _logger;
@@ -49,6 +54,16 @@ namespace ConvocatoriaServices.Context.Application
                     .WithOne(p => p.TipoIdentificacion)
                     .HasForeignKey<Participante>(i => i.tipo_identificacion);
 
+                modelBuilder.Entity<Tipo_DocumentoMinimo>()
+                    .HasOne(ti => ti.Inscripcion_DocumentoMinimo)
+                    .WithOne(p => p.Tipo_DocumentoMinimo)
+                    .HasForeignKey<Inscripcion_DocumentoMinimo>(i => i.codigo_documento);
+
+                modelBuilder.Entity<Inscripcion_Convocatoria>()
+                    .HasOne(ti => ti.Inscripcion_DocumentoMinimo)
+                    .WithOne(p => p.Inscripcion_Convocatoria)
+                    .HasForeignKey<Inscripcion_DocumentoMinimo>(i => i.codigo_inscripcion);
+
                 /*modelBuilder.Entity<Tipo_Documento>()
                     .HasOne(td => td.Documento)
                     .WithMany(d => d.TipoDocumento)
@@ -58,6 +73,8 @@ namespace ConvocatoriaServices.Context.Application
                     .HasMany(d => d.TipoDocumento)
                     .WithOne(t => t.Documento)
                     .HasForeignKey(t => t.codigo);*/
+
+
 
                 modelBuilder.Entity<Documento>()
                    .HasOne(d => d.TipoDocumento)
