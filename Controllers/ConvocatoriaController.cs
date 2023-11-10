@@ -45,5 +45,20 @@ namespace ConvocatoriaApiServices.Controllers
             var comision = this._comisionConvocatoriaService.ExistComisionConvocatoria(datosInscripcion);
             return Ok(comision);
         }
+
+        [HttpGet("buscarEvaluacionHojaVida")]
+        public IActionResult AutenticarComision(String codigoInscripcion)
+        {
+            var comision = this._convocatoriaService.FindEvaluacionHojaVida(codigoInscripcion);
+            return Ok(comision);
+        }
+
+
+        [HttpPost("consolidadoHojaVida")]
+        public IActionResult GetEvaluacionesHojaVida([FromBody]  List<String> listaPerfiles)
+        {
+            var comision = this._convocatoriaService.GetEvaluacionesHojaVida(listaPerfiles);
+            return Ok(comision);
+        }
     }
 }

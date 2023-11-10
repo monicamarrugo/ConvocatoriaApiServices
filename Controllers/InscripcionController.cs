@@ -1,4 +1,5 @@
-﻿using ConvocatoriaApiServices.Models.Dtos;
+﻿using ConvocatoriaApiServices.Models;
+using ConvocatoriaApiServices.Models.Dtos;
 using ConvocatoriaApiServices.Services.Interfaces;
 using ConvocatoriaServices.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -57,6 +58,7 @@ namespace ConvocatoriaApiServices.Controllers
                 var inscripciones = this._inscripcionService.GetInscripcionByPerfil(codigoPerfil);
                 foreach(var inscripcion in inscripciones)
                 {
+                    var evaluado = this._inscripcionService.GetEvaluado(inscripcion.codigo);
                     listaInscripcion.Add(new InscripcionDto()
                     {
                         codigoInscripcion = inscripcion.codigo,
@@ -64,7 +66,8 @@ namespace ConvocatoriaApiServices.Controllers
                         identificacion = inscripcion.Participante.identificacion,
                         nombres = inscripcion.Participante.nombres,
                         apellidos = inscripcion.Participante.apellidos,
-                        codigoPerfil = inscripcion.codigo_perfil
+                        codigoPerfil = inscripcion.codigo_perfil,
+                        evaluado = evaluado
                     });
                 }
                 rta.error = "NO";
@@ -100,10 +103,37 @@ namespace ConvocatoriaApiServices.Controllers
             }
         }
 
+        [HttpGet("consultarEvaluacionMinimos")]
+        public IActionResult GetInscripcionMinimosByPerfil(string codigoPerfil)
+        {
+            RtaTransaccion rta = new RtaTransaccion();
+            try
+            {
+                var inscripcion = this._inscripcionService.GetInscripcionDocumentoMinimoByPerfil(codigoPerfil);
+                rta.error = "NO";
+                rta.respuesta = JsonConvert.SerializeObject(inscripcion);
+
+                return Ok(inscripcion);
+            }
+            catch (Exception ex)
+            {
+                rta.error = "SI";
+                rta.errorDetail = ex.Message;
+                return Ok(rta);
+            }
+        }
+
         [HttpPost("guardarRequisito")]
         public IActionResult SaveDocumentoMinimo([FromBody] List<DtoDocumentoMinimo> datosDocumento)
         {
             var respuestaInscripcion = this._inscripcionService.SaveRequerimientoMin(datosDocumento);
+            return Ok(respuestaInscripcion);
+        }
+
+        [HttpPost("guardarHojaVida")]
+        public IActionResult SaveHV([FromBody] Verificacion_HV datosHv)
+        {
+            var respuestaInscripcion = this._inscripcionService.SaveVerificacionHV(datosHv);
             return Ok(respuestaInscripcion);
         }
     }

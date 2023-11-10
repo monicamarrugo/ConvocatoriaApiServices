@@ -77,6 +77,45 @@ namespace ConvocatoriaApiServices.Services
             }
         }
 
+        public RtaTransaccion SaveVerificacionHV(Verificacion_HV datosHV)
+        {
+            RtaTransaccion rta = new RtaTransaccion();
+            try
+            {
+
+                if (datosHV == null)
+                {
+                    rta.error = "SI";
+                    rta.errorDetail = "Datos hv incompletos!";
+                    return rta;
+                }
+
+
+                    _context.Verificacion_HV.Add(datosHV);
+                    _context.SaveChanges();
+                
+
+                
+
+                rta.error = "NO";
+                rta.mensaje = "Inscripción realizada con exito!";
+                rta.respuesta = "OK";
+                return rta;
+            }
+            catch(DbUpdateException u)
+            {
+                rta.error = "SI";
+                rta.errorDetail = "Ya existe un registro para este código de inscripción";
+                return rta;
+            }
+            catch (Exception ex)
+            {
+                rta.error = "SI";
+                rta.errorDetail = ex.Message;
+                return rta;
+            }
+        }
+
 
         public Inscripcion_Convocatoria FindInscripcion(string codigoInscripcion)
         {
@@ -118,7 +157,6 @@ namespace ConvocatoriaApiServices.Services
                                 nombreTipoDocumento = documentoMinimos.Tipo_DocumentoMinimo.nombre_documento,
                                 cumplido = documentoMinimos.cumplido,
                                 no_cumplido = documentoMinimos.no_cumplido,
-                                fecha_cumplido = documentoMinimos.fecha_cumplido,
                                 observacion = documentoMinimos.observacion
                             });
                         }
@@ -237,9 +275,63 @@ namespace ConvocatoriaApiServices.Services
         public List<Inscripcion_Convocatoria> GetInscripcionByPerfil(String codigoPerfil)
         {
             var listaInscripcion =
-                    _context.Inscripcion_Convocatorias.Include(c=>c.Participante).Where(i => i.codigo_perfil.Equals(codigoPerfil)).ToList();
+                    _context.Inscripcion_Convocatorias.Include(c=>c.Participante).Where(i => i.codigo_perfil.Equals(codigoPerfil) && i.admitido_psicologica == true).ToList();
 
             return listaInscripcion;
         }
+
+        public List<EvaluadoDto> GetInscripcionDocumentoMinimoByPerfil(String codigoPerfil)
+        {
+            List<EvaluadoDto> evaluados = new List<EvaluadoDto>();
+            try
+            {
+                var listaInscripcion =
+                   _context.Inscripcion_Convocatorias.Include(c => c.Participante).Where(i => i.codigo_perfil.Equals(codigoPerfil)).ToList();
+
+                foreach (var inscripcion in listaInscripcion)
+                {
+                    var evaluacionInscrito =
+                    _context.Inscripcion_DocumentoMinimo.Where(dm => dm.codigo_inscripcion.Equals(inscripcion.codigo)).ToList();
+
+                    evaluados.Add(new EvaluadoDto()
+                    {
+                        codigoInscripcion = inscripcion.codigo,
+                        evaluado = evaluacionInscrito.Any(ei => ei.codigo_documento.Equals("ADM")),
+                        DID = evaluacionInscrito.Where(ei=> ei.codigo_documento.Equals("DID")).Select(e => e.cumplido).FirstOrDefault(),
+                        TPU = evaluacionInscrito.Where(ei=> ei.codigo_documento.Equals("TPU")).Select(e => e.cumplido).FirstOrDefault(),
+                        TMD = evaluacionInscrito.Where(ei=> ei.codigo_documento.Equals("TMD")).Select(e => e.cumplido).FirstOrDefault(),
+                        CED = evaluacionInscrito.Where(ei=> ei.codigo_documento.Equals("CED")).Select(e => e.cumplido).FirstOrDefault(),
+                        CEP = evaluacionInscrito.Where(ei=> ei.codigo_documento.Equals("CEP")).Select(e => e.cumplido).FirstOrDefault(),
+                        CCI = evaluacionInscrito.Where(ei=> ei.codigo_documento.Equals("CCI")).Select(e => e.cumplido).FirstOrDefault(),
+                        ADM = evaluacionInscrito.Where(ei=> ei.codigo_documento.Equals("ADM")).Select(e => e.cumplido).FirstOrDefault(),
+                        observacion = evaluacionInscrito.Where(ei=> ei.codigo_documento.Equals("ADM")).Select(e => e.observacion).FirstOrDefault()                     
+                    }
+                        );
+                }
+                   return evaluados;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+            
+        }
+
+        public bool GetEvaluado(string codigoInscripcion)
+        {
+            try { 
+                var evaluado = false;
+                evaluado =
+                             _context.Inscripcion_DocumentoMinimo
+                             .Any(d => d.codigo_inscripcion.Equals(codigoInscripcion) && d.codigo_documento.Equals("ADM"));
+                return evaluado;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
+
 }

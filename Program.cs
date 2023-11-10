@@ -47,7 +47,7 @@ public class Program
         builder.Services.AddDbContext<ApplicationDbContext>();
         builder.Services.AddCors(options => {
             options.AddPolicy(MyAllowSpecificOrigins,
-            builder => builder.WithOrigins("http://181.215.197.28", "http://localhost:4200")
+            builder => builder.WithOrigins("*")
                    .AllowAnyMethod()
                    .AllowAnyHeader()
                 );

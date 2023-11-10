@@ -1,7 +1,10 @@
-﻿using ConvocatoriaApiServices.Models.Dtos;
+﻿using ConvocatoriaApiServices.Models;
+using ConvocatoriaApiServices.Models.Dtos;
 using ConvocatoriaApiServices.Services.Interfaces;
 using ConvocatoriaServices.Context.Application;
 using ConvocatoriaServices.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace ConvocatoriaApiServices.Services
 {
@@ -37,6 +40,53 @@ namespace ConvocatoriaApiServices.Services
                 convocatoriaResponse.activo = false;
             }
             return convocatoriaResponse;
+        }
+
+        public Verificacion_HV FindEvaluacionHojaVida(string codigoInscripcion)
+        {
+            try
+            {
+                var verificacion =
+                     _context.Verificacion_HV.Where(v => v.codigoinscripcion.Equals(codigoInscripcion)).FirstOrDefault();
+
+                return verificacion;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public List<ConsolidadoDto> GetEvaluacionesHojaVida(List<string> perfiles)
+        {
+            List<ConsolidadoDto> consolidadoDtos = new List<ConsolidadoDto>();
+            try
+            {
+                var listaVerificacion =
+                     _context.Verificacion_HV.Include( i=> i.Inscripcion_Convocatoria)
+                     .Where(v => perfiles.Contains(v.Inscripcion_Convocatoria.codigo_perfil)).ToList();
+
+                foreach(var item in listaVerificacion)
+                {
+                    consolidadoDtos.Add(new ConsolidadoDto()
+                    {
+                        codigoperfil = item.Inscripcion_Convocatoria.codigo_perfil,
+                        codigoinscripcion = item.codigoinscripcion,
+                        totalFormacion = item.totalFormacion,
+                        totalFormacionIn = item.totalFormacionIn,
+                        totalProduccion = item.totalProduccion,
+                        totalExperiencia = item.totalExperiencia,
+                        totalEvaluacion = item.totalEvaluacion,
+                        admitido = item.admitido
+                    });
+                }
+
+                return consolidadoDtos;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
     }

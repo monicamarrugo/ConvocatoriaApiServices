@@ -148,6 +148,12 @@ namespace ConvocatoriaApiServices.Controllers
                     return Ok(rta);
                 }
                 List<Documento> documentos = _documentoService.ListDocumento(codigoInscripcion);
+                if (documentos.Count == 0)
+                {
+                    rta.error = "SI";
+                    rta.errorDetail = "¡No se encontró archivos para el código de inscripción!";
+                    return Ok(rta);
+                }
                 List<String> files = new List<String>();
                 
 

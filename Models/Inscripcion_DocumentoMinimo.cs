@@ -18,9 +18,6 @@ namespace ConvocatoriaApiServices.Models
 
         public bool cumplido { get; set; }
         public bool no_cumplido { get; set; }
-        
-
-        public DateTime fecha_cumplido { get; set; }
 
         public string? observacion { get; set; }
     }

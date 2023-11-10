@@ -22,9 +22,12 @@ namespace ConvocatoriaServices.Context.Application
         public DbSet<Tipo_DocumentoMinimo> Tipo_DocumentoMinimo { get; set; }
         public DbSet<FacultadPerfil> FacultadPerfil { get; set; }
         public DbSet<Inscripcion_DocumentoMinimo> Inscripcion_DocumentoMinimo { get; set; }
+        public DbSet<Verificacion_HV> Verificacion_HV { get; set; }
         // Otros DbSets...
 
         private readonly ILogger<ApplicationDbContext> _logger;
+
+
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IConfiguration configuration)
         : base(options)
@@ -101,6 +104,11 @@ namespace ConvocatoriaServices.Context.Application
                    .HasOne(p => p.Inscripcion_Convocatoria)
                    .WithOne(ic => ic.Perfil)
                    .HasForeignKey<Inscripcion_Convocatoria>(i => i.codigo_perfil);
+
+                modelBuilder.Entity<Inscripcion_Convocatoria>()
+                   .HasOne(ic => ic.Verificacion_HV)
+                   .WithOne(v => v.Inscripcion_Convocatoria)
+                   .HasForeignKey<Verificacion_HV>(vh => vh.codigoinscripcion);
             }
             catch (Exception ex) {
 

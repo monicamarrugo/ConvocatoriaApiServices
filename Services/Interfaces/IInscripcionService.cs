@@ -1,4 +1,5 @@
-﻿using ConvocatoriaApiServices.Models.Dtos;
+﻿using ConvocatoriaApiServices.Models;
+using ConvocatoriaApiServices.Models.Dtos;
 using ConvocatoriaServices.Models;
 
 namespace ConvocatoriaApiServices.Services.Interfaces
@@ -17,5 +18,10 @@ namespace ConvocatoriaApiServices.Services.Interfaces
         public List<DtoDocumentoMinimo> GetDocumentosMinimos(string codigoInscripcion);
 
         public RtaTransaccion SaveRequerimientoMin(List<DtoDocumentoMinimo> documentoMinimo);
+
+        public bool GetEvaluado(string codigoInscripcion);
+        public List<EvaluadoDto> GetInscripcionDocumentoMinimoByPerfil(String codigoPerfil);
+
+        public RtaTransaccion SaveVerificacionHV(Verificacion_HV datosHV);
     }
 }

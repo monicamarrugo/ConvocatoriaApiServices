@@ -15,5 +15,6 @@ namespace ConvocatoriaApiServices.Models
         public string usuario { get; set;}
 
         public string password { get; set;}
+        public string? tipoUsuario { get; set; }
     }
 }

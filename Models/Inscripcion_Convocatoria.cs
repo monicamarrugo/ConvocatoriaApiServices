@@ -15,10 +15,13 @@ namespace ConvocatoriaServices.Models
         public string codigo_perfil { get; set; }
         public Perfil Perfil { get; set; }
         public string identificacion_participante { get; set; }
+        public bool admitido_psicologica { get; set; }
         public Participante Participante { get; set; }
 
         public Documento Documento { get; set; }
 
         public Inscripcion_DocumentoMinimo Inscripcion_DocumentoMinimo { get; set; }
+
+        public Verificacion_HV Verificacion_HV { get; set; }
     }
 }

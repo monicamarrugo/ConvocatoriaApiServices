@@ -47,6 +47,7 @@ namespace ConvocatoriaApiServices.Services
                     comision.id = existeComision.id;
                     comision.nombre = existeComision.nombre;
                     comision.facultad = existeComision.facultad;
+                    comision.tipoUsuario = existeComision.tipoUsuario;
                 }
                 return comision;
             }
