@@ -23,6 +23,9 @@ namespace ConvocatoriaServices.Context.Application
         public DbSet<FacultadPerfil> FacultadPerfil { get; set; }
         public DbSet<Inscripcion_DocumentoMinimo> Inscripcion_DocumentoMinimo { get; set; }
         public DbSet<Verificacion_HV> Verificacion_HV { get; set; }
+        public DbSet<CompentenciasAcademicas> CompentenciasAcademicas { get; set; }
+        public DbSet<Evaluacion_Competencia> Evaluacion_Competencia { get; set; }
+        public DbSet<Detalle_Evaluacion> Detalle_Evaluacion { get; set; }
         // Otros DbSets...
 
         private readonly ILogger<ApplicationDbContext> _logger;
@@ -33,6 +36,7 @@ namespace ConvocatoriaServices.Context.Application
         : base(options)
         {
             _configuration = configuration;
+            ChangeTracker.LazyLoadingEnabled = true;
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -83,6 +87,16 @@ namespace ConvocatoriaServices.Context.Application
                    .HasOne(d => d.TipoDocumento)
                    .WithMany(t => t.Documentos)
                    .HasForeignKey(d => d.tipo_documento);
+
+                modelBuilder.Entity<Detalle_Evaluacion>()
+                   .HasOne(d => d.Evaluacion_Competencia)
+                   .WithMany(t => t.Detalle_Evaluacion)
+                   .HasForeignKey(d => d.id_evaluacionCompetencia);
+
+                modelBuilder.Entity<Detalle_Evaluacion>()
+                  .HasOne(d => d.CompentenciasAcademicas)
+                  .WithMany(t => t.Detalle_Evaluacion)
+                  .HasForeignKey(d => d.id_competencia);
 
 
                 modelBuilder.Entity<Inscripcion_Convocatoria>()

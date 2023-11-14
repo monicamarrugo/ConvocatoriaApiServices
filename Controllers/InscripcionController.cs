@@ -136,5 +136,25 @@ namespace ConvocatoriaApiServices.Controllers
             var respuestaInscripcion = this._inscripcionService.SaveVerificacionHV(datosHv);
             return Ok(respuestaInscripcion);
         }
+
+        [HttpGet("obtenerAdmitidosHV")]
+        public IActionResult GetAdmitidosHVByPerfil(string codigoPerfil)
+        {
+            RtaTransaccion rta = new RtaTransaccion();
+            try
+            {
+                var inscripcion = this._inscripcionService.GetAdmitidosHvByPerfil(codigoPerfil);
+                rta.error = "NO";
+                rta.respuesta = JsonConvert.SerializeObject(inscripcion);
+
+                return Ok(inscripcion);
+            }
+            catch (Exception ex)
+            {
+                rta.error = "SI";
+                rta.errorDetail = ex.Message;
+                return Ok(rta);
+            }
+        }
     }
 }

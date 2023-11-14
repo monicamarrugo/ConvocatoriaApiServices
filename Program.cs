@@ -12,6 +12,8 @@ using Microsoft.Extensions.Logging;
 using Serilog.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting;
 using Serilog.Formatting.Compact;
+using AutoMapper;
+using ConvocatoriaApiServices.Mappers;
 
 public class Program
 {
@@ -37,7 +39,8 @@ public class Program
         }
 
         var builder = WebApplication.CreateBuilder(args);
-        // Add services to the container.    
+        // Add services to the container.
+        
         builder.Services.AddControllers();
         builder.Services.AddScoped<IConvocatoriaService, ConvocatoriaService>();
         builder.Services.AddScoped<IComisionConvocatoriaService, ComisionConvocatoriaService>();

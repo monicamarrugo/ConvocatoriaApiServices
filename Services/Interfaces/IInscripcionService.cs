@@ -23,5 +23,7 @@ namespace ConvocatoriaApiServices.Services.Interfaces
         public List<EvaluadoDto> GetInscripcionDocumentoMinimoByPerfil(String codigoPerfil);
 
         public RtaTransaccion SaveVerificacionHV(Verificacion_HV datosHV);
+
+        public List<InscripcionDto> GetAdmitidosHvByPerfil(String codigoPerfil);
     }
 }

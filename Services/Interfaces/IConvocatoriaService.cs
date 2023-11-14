@@ -12,5 +12,12 @@ namespace ConvocatoriaApiServices.Services.Interfaces
         public Verificacion_HV FindEvaluacionHojaVida(string codigoInscripcion);
 
         public List<ConsolidadoDto> GetEvaluacionesHojaVida(List<string> perfiles);
+        public EvaluacionDto GetCompentenciasAcademicas();
+
+        public RtaTransaccion SaveEvalucionCompetencia(EvaluacionDto dtoEvaluacion);
+
+        public EvaluacionDto GetCompentenciasPonderadas(string codigoInscripcion);
+
+        public RtaTransaccion SavePromedioCompetencia(ConsolidadoCompetenciaDto dtoConsolidado);
     }
 }

@@ -280,6 +280,28 @@ namespace ConvocatoriaApiServices.Services
             return listaInscripcion;
         }
 
+        public List<InscripcionDto> GetAdmitidosHvByPerfil(String codigoPerfil)
+        {
+            List<InscripcionDto> admitidosHV = new List<InscripcionDto>();
+            var listaAdmitidosHV =
+                    _context.Verificacion_HV.Include(c => c.Inscripcion_Convocatoria).Include(p => p.Inscripcion_Convocatoria.Participante).Where(i => i.admitido == true 
+                    && i.Inscripcion_Convocatoria.codigo_perfil.Equals(codigoPerfil)).ToList();
+
+            foreach (var admitido in listaAdmitidosHV)
+            {
+                admitidosHV.Add(new InscripcionDto()
+                {
+                    nombres = admitido.Inscripcion_Convocatoria.Participante.nombres,
+                    apellidos = admitido.Inscripcion_Convocatoria.Participante.apellidos,
+                    codigoInscripcion = admitido.codigoinscripcion,
+                    identificacion = admitido.Inscripcion_Convocatoria.identificacion_participante,
+                    codigoPerfil = admitido.Inscripcion_Convocatoria.codigo_perfil
+                });
+            }
+
+            return admitidosHV;
+        }
+
         public List<EvaluadoDto> GetInscripcionDocumentoMinimoByPerfil(String codigoPerfil)
         {
             List<EvaluadoDto> evaluados = new List<EvaluadoDto>();

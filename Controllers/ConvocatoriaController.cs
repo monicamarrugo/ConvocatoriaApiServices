@@ -60,5 +60,33 @@ namespace ConvocatoriaApiServices.Controllers
             var comision = this._convocatoriaService.GetEvaluacionesHojaVida(listaPerfiles);
             return Ok(comision);
         }
+
+        [HttpGet("listarCompetencias")]
+        public IActionResult GetListCompetencias(string codigoInscripcion)
+        {
+            var competencias = this._convocatoriaService.GetCompentenciasAcademicas();
+            return Ok(competencias);
+        }
+
+        [HttpGet("listarPonderado")]
+        public IActionResult GetListPonderado(string codigoInscripcion)
+        {
+            var competencias = this._convocatoriaService.GetCompentenciasPonderadas(codigoInscripcion);
+            return Ok(competencias);
+        }
+
+        [HttpPost("guardarEvaluacionCompetencias")]
+        public IActionResult SaveEvaluacionCompetencias([FromBody] EvaluacionDto dtoEvaluacion)
+        {
+            var respuesta = this._convocatoriaService.SaveEvalucionCompetencia(dtoEvaluacion);
+            return Ok(respuesta);
+        }
+
+        [HttpPost("guardarConsolidadoCompetencias")]
+        public IActionResult SaveEvaluacionCompetencias([FromBody] ConsolidadoCompetenciaDto dtoEvaluacion)
+        {
+            var respuesta = this._convocatoriaService.SavePromedioCompetencia(dtoEvaluacion);
+            return Ok(respuesta);
+        }
     }
 }
