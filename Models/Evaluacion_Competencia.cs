@@ -14,8 +14,7 @@ namespace ConvocatoriaApiServices.Models
         public string nombre_evaluador { get; set; }
         public int  total { get; set; }
         public string observacion { get; set; }
-        public double? total_ponderado { get; set; }
-        public bool elegible { get; set; }
+        public string codigo_perfil { get; set; }
 
         [JsonIgnore]
         public ICollection<Detalle_Evaluacion> Detalle_Evaluacion { get; set; }

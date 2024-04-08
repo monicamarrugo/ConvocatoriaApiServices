@@ -26,6 +26,7 @@ namespace ConvocatoriaServices.Context.Application
         public DbSet<CompentenciasAcademicas> CompentenciasAcademicas { get; set; }
         public DbSet<Evaluacion_Competencia> Evaluacion_Competencia { get; set; }
         public DbSet<Detalle_Evaluacion> Detalle_Evaluacion { get; set; }
+        public DbSet<Evaluacion_Competencia_Consolidado> Evaluacion_Competencia_Consolidado { get; set; }
         // Otros DbSets...
 
         private readonly ILogger<ApplicationDbContext> _logger;

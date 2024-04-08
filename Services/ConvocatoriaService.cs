@@ -171,6 +171,7 @@ namespace ConvocatoriaApiServices.Services
                 evaluacion.nombre_evaluador = dtoEvaluacion.cabeceraEvaluacion.nombreEvaluador;
                 evaluacion.total = dtoEvaluacion.cabeceraEvaluacion.totalEvaluacion;
                 evaluacion.observacion = dtoEvaluacion.cabeceraEvaluacion.observacion;
+                evaluacion.codigo_perfil = dtoEvaluacion.cabeceraEvaluacion.codigoPerfil;
 
                 foreach (var detalle in dtoEvaluacion.detalleEvaluacion)
                 {
@@ -203,6 +204,7 @@ namespace ConvocatoriaApiServices.Services
             try
             {
                 RtaTransaccion rta = new RtaTransaccion();
+                Evaluacion_Competencia_Consolidado consolidado = new Evaluacion_Competencia_Consolidado();
                 var evaluaciones = _context.Evaluacion_Competencia
                     .Where(c => c.codigo_inscripcion.Equals(dtoConsolidado.codigo_inscripcion));
                 if (evaluaciones.Count() == 0)
@@ -211,17 +213,28 @@ namespace ConvocatoriaApiServices.Services
                     rta.errorDetail = "NO Existe evaluaciones realizadas!";
                     return rta;
                 }
-              
-                foreach (var evaluacion in evaluaciones)
+
+                var existeConsolidado = _context.Evaluacion_Competencia_Consolidado
+                   .Where(c => c.codigo_inscripcion.Equals(dtoConsolidado.codigo_inscripcion)).FirstOrDefault();
+                
+                if(existeConsolidado != null)
                 {
-                    evaluacion.total_ponderado = dtoConsolidado.total_ponderado;
-                    evaluacion.elegible = dtoConsolidado.elegible;
-                    //_context.Evaluacion_Competencia.Update(evaluacion);
-                    _context.SaveChanges();
+                    existeConsolidado.total_ponderado = dtoConsolidado.total_ponderado;
+                    existeConsolidado.admitido = dtoConsolidado.elegible;
                 }
+                else
+                {
+                    consolidado.codigo_inscripcion = dtoConsolidado.codigo_inscripcion;
+                    consolidado.total_ponderado = dtoConsolidado.total_ponderado;
+                    consolidado.admitido = dtoConsolidado.elegible;
+                    consolidado.codigo_perfil = dtoConsolidado.codigoPerfil;
+                    _context.Evaluacion_Competencia_Consolidado.Add(consolidado);
+                }                
+                
+                _context.SaveChanges();
 
                 rta.error = "NO";
-                rta.mensaje = "Evaluación guardada con exito!";
+                rta.mensaje = "Consolidado guardado con exito!";
                 return rta;
             }
             catch (Exception ex)
@@ -232,6 +245,52 @@ namespace ConvocatoriaApiServices.Services
                 return rta;
             }
 
+        }
+
+        public List<EvaluacionDto> GetEvalCompentenciasInscripcion(string codigoInscripcion)
+        {
+            List<EvaluacionDto> consolidadoDto = new List<EvaluacionDto>();
+            List<Evaluacion_Competencia> evaluaciones = _context.Evaluacion_Competencia
+                .Where(e => e.codigo_inscripcion.Equals(codigoInscripcion)).ToList();
+            int numEvaluaciones = evaluaciones.Count;
+
+
+            foreach (var evaluacion in evaluaciones)
+            {
+                consolidadoDto.Add(new EvaluacionDto()
+                {
+                    cabeceraEvaluacion = new EvaluacionCompetencia()
+                    {
+                        codigoInscripicion = evaluacion.codigo_inscripcion,
+                        identificacionEvaluador = evaluacion.identificacion_evaluador,
+                        nombreEvaluador = evaluacion.nombre_evaluador,
+                        totalEvaluacion = evaluacion.total,
+                        observacion = evaluacion.observacion
+                    }
+                });
+            }
+           
+            return consolidadoDto;
+        }
+
+        public List<ConsolidadoCompetenciaDto> GetCompentenciasConsolidado(List<string> perfiles)
+        {
+            List<ConsolidadoCompetenciaDto> consolidadoDto = new List<ConsolidadoCompetenciaDto>();
+            List<Evaluacion_Competencia_Consolidado> consolidados = _context.Evaluacion_Competencia_Consolidado.
+                Where(c => perfiles.Contains(c.codigo_perfil)).ToList();
+
+
+            foreach (var competencia in consolidados)
+            {
+                consolidadoDto.Add(new ConsolidadoCompetenciaDto()
+                {
+                    codigoPerfil = competencia.codigo_perfil,
+                    codigo_inscripcion= competencia.codigo_inscripcion,
+                    total_ponderado = competencia.total_ponderado,
+                    elegible = competencia.admitido
+                });
+            }
+            return consolidadoDto;
         }
     }
 }

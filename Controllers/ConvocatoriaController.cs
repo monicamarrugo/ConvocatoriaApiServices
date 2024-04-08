@@ -88,5 +88,19 @@ namespace ConvocatoriaApiServices.Controllers
             var respuesta = this._convocatoriaService.SavePromedioCompetencia(dtoEvaluacion);
             return Ok(respuesta);
         }
+
+        [HttpPost("listarConsolidadoCompetencias")]
+        public IActionResult GetListConsolidadoCompetencias([FromBody] List<String> listaPerfiles)
+        {
+            var competencias = this._convocatoriaService.GetCompentenciasConsolidado(listaPerfiles);
+            return Ok(competencias);
+        }
+
+        [HttpGet("evaluacionCompetenciaCodigo")]
+        public IActionResult GetListEvalCompetenciasByInscripcion(string codigoInscripcion)
+        {
+            var competencias = this._convocatoriaService.GetEvalCompentenciasInscripcion(codigoInscripcion);
+            return Ok(competencias);
+        }
     }
 }

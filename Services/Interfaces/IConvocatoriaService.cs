@@ -19,5 +19,9 @@ namespace ConvocatoriaApiServices.Services.Interfaces
         public EvaluacionDto GetCompentenciasPonderadas(string codigoInscripcion);
 
         public RtaTransaccion SavePromedioCompetencia(ConsolidadoCompetenciaDto dtoConsolidado);
+
+        public List<EvaluacionDto> GetEvalCompentenciasInscripcion(string codigoInscripcion);
+
+        public List<ConsolidadoCompetenciaDto> GetCompentenciasConsolidado(List<string> perfiles);
     }
 }

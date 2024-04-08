@@ -24,6 +24,9 @@
         public int totalEvaluacion { get; set; }
 
         public string observacion { get; set; }
+
+        public string codigoPerfil { get; set; }
+        public DateTime fechaEvaluacion { get; set; }
     }
 
     public class DetalleEvaluacion
