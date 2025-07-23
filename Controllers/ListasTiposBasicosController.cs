@@ -56,6 +56,7 @@ namespace ConvocatoriaApiServices.Controllers
                         {
                             codigo = t.codigo,
                             descripcion = t.descripcion,
+                            nombre = t.nombre
                         }
                         );
                 });

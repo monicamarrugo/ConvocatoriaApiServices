@@ -13,6 +13,7 @@ namespace ConvocatoriaServices.Models
         [Key]
         public string codigo { get; set; }
         public string descripcion { get; set; }
+        public string nombre { get; set; }
 
         [JsonIgnore]
         public ICollection<Documento> Documentos { get; set; }
