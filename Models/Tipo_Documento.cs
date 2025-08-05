@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ConvocatoriaApiServices.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
@@ -17,6 +18,10 @@ namespace ConvocatoriaServices.Models
 
         [JsonIgnore]
         public ICollection<Documento> Documentos { get; set; }
+
+        // Relación uno a muchos
+        [JsonIgnore]
+        public ICollection<SubTipo_Documento> Subtipos { get; set; }
 
     }
 }

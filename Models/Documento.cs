@@ -16,5 +16,7 @@ namespace ConvocatoriaServices.Models
         public string codigo_inscripcion { get; set; }
         public Inscripcion_Convocatoria Inscripcion_Convocatoria { get; set; }
 
+        public string subtipo_documento { get; set; }
+
     }
 }

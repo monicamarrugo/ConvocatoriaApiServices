@@ -27,6 +27,8 @@ namespace ConvocatoriaServices.Context.Application
         public DbSet<Evaluacion_Competencia> Evaluacion_Competencia { get; set; }
         public DbSet<Detalle_Evaluacion> Detalle_Evaluacion { get; set; }
         public DbSet<Evaluacion_Competencia_Consolidado> Evaluacion_Competencia_Consolidado { get; set; }
+
+        public DbSet<SubTipo_Documento> SubtipoDocumento { get; set; }
         // Otros DbSets...
 
         private readonly ILogger<ApplicationDbContext> _logger;
@@ -82,7 +84,12 @@ namespace ConvocatoriaServices.Context.Application
                     .WithOne(t => t.Documento)
                     .HasForeignKey(t => t.codigo);*/
 
+             
 
+                modelBuilder.Entity<SubTipo_Documento>()
+                  .HasOne(d => d.TipoDocumento)
+                  .WithMany(t => t.Subtipos)
+                  .HasForeignKey(d => d.codigo_tipo_documento);
 
                 modelBuilder.Entity<Documento>()
                    .HasOne(d => d.TipoDocumento)

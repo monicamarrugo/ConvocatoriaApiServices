@@ -20,6 +20,7 @@ namespace ConvocatoriaApiServices.Services
                 List<Documento> documentos =
                     _context.Documentos
                     .Include(t=>t.TipoDocumento)
+                    .ThenInclude(s => s.Subtipos)
                     .Where(d => d.codigo_inscripcion.Equals(codigoInscripcion))
                     .ToList();
                 return documentos;
@@ -38,6 +39,7 @@ namespace ConvocatoriaApiServices.Services
                 documento.tipo_documento = datosDocumento.tipoDocumento;
                 documento.contenido = datosDocumento.ruta;
                 documento.codigo_inscripcion = datosDocumento.codigoInscripcion;
+                documento.subtipo_documento = datosDocumento.subtipoDocumento;
 
                 _context.Documentos.Add(documento);
                 _context.SaveChanges();
@@ -46,6 +48,30 @@ namespace ConvocatoriaApiServices.Services
                 return rta;
             }
             catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public bool DeleteDocumento(int idDocumento)
+        {
+
+            RtaTransaccion rta = new RtaTransaccion();
+            try
+            {
+                var documento = _context.Documentos.Find(idDocumento);
+                if (documento == null)
+                {
+                    return false;
+                }
+
+
+                _context.Documentos.Remove(documento);
+                _context.SaveChanges();
+                rta.error = "NO";
+                rta.mensaje = "Documento eliminado con exito!";
+                return true;
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }

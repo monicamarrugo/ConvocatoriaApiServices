@@ -93,6 +93,7 @@ namespace ConvocatoriaApiServices.Controllers
                         await file.CopyToAsync(stream);
                     }
                     datosDocumento.ruta = file.FileName;
+                    var respuestaDelete = this._documentoService.DeleteDocumento(datosDocumento.idDocumento);
                     var respuestaDocumento = this._documentoService.SaveDocumento(datosDocumento);
                     return Ok(respuestaDocumento);
                 }
@@ -215,9 +216,12 @@ namespace ConvocatoriaApiServices.Controllers
                     listaDocumento.Add(
                     new DocumentoResponseDto
                     {
+                        idDocumento = documento.id_documento,
                         contenido = documento.contenido,
                         tipoDocumento = documento.tipo_documento,
-                        descTipodocumento = documento.TipoDocumento.descripcion
+                        subtipoDocumento = documento.subtipo_documento,
+                        nombreSubtipoDocumento = documento.TipoDocumento.Subtipos.ToList().Where(x => x.codigo == documento.subtipo_documento).FirstOrDefault().nombre,
+                        descTipodocumento = documento.TipoDocumento.nombre
                     }
                     );
                     }

@@ -3,6 +3,7 @@ using ConvocatoriaApiServices.Models.Dtos;
 using ConvocatoriaApiServices.Services.Interfaces;
 using ConvocatoriaServices.Context.Application;
 using ConvocatoriaServices.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ConvocatoriaApiServices.Services
 {
@@ -27,7 +28,7 @@ namespace ConvocatoriaApiServices.Services
 
         public List<Tipo_Documento> GetAllTiposDocumento()
         {
-            return _context.Tipo_Documentos.ToList();
+            return _context.Tipo_Documentos.Include(t => t.Subtipos).ToList();
         }
 
         public List<Tipo_DocumentoMinimo> GetAllTiposDocumentoMinimo()

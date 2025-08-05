@@ -56,7 +56,13 @@ namespace ConvocatoriaApiServices.Controllers
                         {
                             codigo = t.codigo,
                             descripcion = t.descripcion,
-                            nombre = t.nombre
+                            nombre = t.nombre,
+                            subtipos = t.Subtipos.Select(s => new SubtipoDocumentoDto
+                            {
+                                codigo = s.codigo,
+                                descripcion = s.descripcion,
+                                nombre = s.nombre
+                            }).ToList()
                         }
                         );
                 });

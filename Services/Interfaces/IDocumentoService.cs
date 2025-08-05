@@ -7,5 +7,7 @@ namespace ConvocatoriaApiServices.Services.Interfaces
     {
         public RtaTransaccion SaveDocumento(DocumentoUploadedDto datosDocumento);
         public List<Documento> ListDocumento(string codigoInscripcion);
+
+        public bool DeleteDocumento(int idDocumento);
     }
 }
