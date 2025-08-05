@@ -13,6 +13,7 @@ namespace ConvocatoriaApiServices.Models.Dtos
         public String apellidos { get; set; }
         public String email { get; set; }
         public String telefono { get; set; }
+        public bool discapacidad { get; set; }
         public bool evaluado { get; set; }
     }
 }

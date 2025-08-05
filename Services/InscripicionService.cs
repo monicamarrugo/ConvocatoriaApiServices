@@ -58,7 +58,8 @@ namespace ConvocatoriaApiServices.Services
                     nombres = datosInscripcion.nombres,
                     apellidos = datosInscripcion.apellidos,
                     email = datosInscripcion.email,
-                    telefono = datosInscripcion.telefono
+                    telefono = datosInscripcion.telefono,
+                    discapacidad = datosInscripcion.discapacidad
                 };
 
                 _context.Inscripcion_Convocatorias.Add(inscripcion);

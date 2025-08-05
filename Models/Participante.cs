@@ -16,7 +16,9 @@ namespace ConvocatoriaServices.Models
         public string nombres { get; set; } 
         public string apellidos { get; set; } 
         public string email { get; set; } 
-        public string telefono { get; set; } 
+        public string telefono { get; set; }
+
+        public bool discapacidad { get; set; }
 
         public Inscripcion_Convocatoria Inscripcion_Convocatoria { get; set; }
 

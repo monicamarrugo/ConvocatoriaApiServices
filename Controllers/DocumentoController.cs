@@ -219,8 +219,11 @@ namespace ConvocatoriaApiServices.Controllers
                         idDocumento = documento.id_documento,
                         contenido = documento.contenido,
                         tipoDocumento = documento.tipo_documento,
-                        subtipoDocumento = documento.subtipo_documento,
-                        nombreSubtipoDocumento = documento.TipoDocumento.Subtipos.ToList().Where(x => x.codigo == documento.subtipo_documento).FirstOrDefault().nombre,
+                        subtipoDocumento = documento.subtipo_documento != null? documento.subtipo_documento: string.Empty ,
+                        nombreSubtipoDocumento = !string.IsNullOrEmpty(documento.subtipo_documento)
+                        ? documento.TipoDocumento?.Subtipos?
+                            .FirstOrDefault(x => x.codigo == documento.subtipo_documento)?.nombre ?? string.Empty
+                        : string.Empty,
                         descTipodocumento = documento.TipoDocumento.nombre
                     }
                     );
