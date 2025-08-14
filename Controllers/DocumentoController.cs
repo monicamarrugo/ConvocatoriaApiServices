@@ -106,6 +106,39 @@ namespace ConvocatoriaApiServices.Controllers
                 return Ok(rta);
             }
         }
+
+        [HttpPost("eliminar")]
+        public async Task<IActionResult> DeleteFile([FromForm] DocumentoUploadedDto datosDocumento)
+        {
+            RtaTransaccion rta = new RtaTransaccion();
+            try
+            {
+               
+                    datosDocumento.codigoInscripcion = datosDocumento.codigoInscripcion.ToUpper();
+                    if (!this._inscripcionService.ExistsInscripcion(datosDocumento.codigoInscripcion))
+                    {
+                        rta.error = "SI";
+                        rta.errorDetail = "¡No se encontró el código de inscripción!";
+                        return Ok(rta);
+                    }
+                    var dirUploads = _configuration.GetSection("CustomProperties").GetValue<String>("DirUploads");
+                    var respuestaDelete = this._documentoService.DeleteDocumento(datosDocumento.idDocumento);
+
+                    if (respuestaDelete)
+                    {
+                        rta.error = "NO";
+                        rta.mensaje = "¡Documento eliminado exitosamente!";
+                    }
+                    return Ok(rta);
+                
+            }
+            catch (Exception ex)
+            {
+                rta.error = "SI";
+                rta.errorDetail = ex.Message;
+                return Ok(rta);
+            }
+        }
         [HttpPost("descargar")]
         public IActionResult DownloadFile(string fileName)
         {
